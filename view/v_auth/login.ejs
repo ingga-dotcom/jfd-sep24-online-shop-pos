@@ -1,0 +1,25 @@
+<%- include('../v_layout/head') %>
+
+<body class="d-flex align-items-center py-4 bg-body-tertiary">
+    <link rel="stylesheet" href="/css-tambahan/layout-login.css">
+    <main class="form-signin w-100 m-auto">
+        <form method="post" action="/auth/proses-login">
+          <img class="mb-4" src="/gambar/picture1.jpg" alt="logo" height="70">
+          <h1 class="h3 mb-3 fw-normal">Silakan masuk</h1>
+      
+          <div class="form-floating">
+            <input type="email" class="form-control" name="form_email" placeholder="name@example.com">
+            <label for="floatingInput">Alamat email</label>
+          </div>
+          <div class="form-floating">
+            <input type="password" class="form-control" name="form_password" placeholder="Password">
+            <label for="floatingPassword">Kata sandi</label>
+          </div>
+      
+          <button class="btn btn-primary w-100 py-2" type="submit">Masuk</button>
+          <p class="mt-5 mb-3 text-body-secondary">&copy; 2017 - 2024</p>
+        </form>
+    </main>
+</body>
+
+<%- include('../v_layout/foot') %>
