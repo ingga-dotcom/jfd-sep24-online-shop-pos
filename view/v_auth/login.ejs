@@ -5,7 +5,15 @@
     <main class="form-signin w-100 m-auto">
         <form method="post" action="/auth/proses-login">
           <img class="mb-4" src="/gambar/picture1.jpg" alt="logo" height="70">
-          <h1 class="h3 mb-3 fw-normal">Silakan masuk</h1>
+          <br>
+          <% if (typeof notifikasi !== 'undefined') { %>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <%= notifikasi %>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          <% } %>
+
+          <h1 class="h3 mt-3 mb-3 fw-normal">Silakan masuk</h1>
       
           <div class="form-floating">
             <input type="email" class="form-control" name="form_email" placeholder="name@example.com">
