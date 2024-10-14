@@ -7,6 +7,7 @@ const c_beranda     = require('./controller/c_beranda')
 const c_auth        = require('./controller/c_auth')
 const cek_login     = c_auth.cek_login
 const c_toko        = require('./controller/c_toko')
+const c_olshop      = require('./controller/c_olshop')
 
 
 // settingan untuk data session login
@@ -37,6 +38,8 @@ app.get('/auth/login', c_auth.halaman_login)
 app.post('/auth/proses-login', c_auth.proses_login)
 
 app.get('/toko', cek_login, c_toko.index)
+
+app.get('/olshop', cek_login, c_olshop.halaman_beranda)
 
 
 app.listen(port, ()=>{
