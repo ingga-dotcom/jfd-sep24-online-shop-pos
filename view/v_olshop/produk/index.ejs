@@ -5,6 +5,12 @@
 <div class="container my-5">
     <h1>Produk Indeks</h1>
     <hr>
+    <% if (typeof notifikasi !== 'undefined') { %>
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <%- notifikasi %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } %>
     <br>
     <div class="row">
         <div class="col text-end">
@@ -22,40 +28,31 @@
                 <th>harga</th>
                 <th>stok</th>
                 <th>foto</th>
-                <th>video</th>
-                <th>deskripsi</th>
-                <th>spesifikasi</th>
-                <th>info penting</th>
                 <th>aksi</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>detail  edit  hapus</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>kolom</td>
-                <td>detail  edit  hapus</td>
-            </tr>
+            <% for (const i in produkJual) { %>
+                <tr>
+                    <td><%= Number(i) + 1 %></td>
+                    <td><%= produkJual[i].nama %></td>
+                    <td><%= produkJual[i].kategori_nama %></td>
+                    <td><%= produkJual[i].harga %></td>
+                    <td><%= produkJual[i].stok %></td>
+                    <td><img src="/upload/produk-foto/<%= produkJual[i].foto1 %>" alt="" height="70px"></td>
+                    <td>
+                        <a href="/olshop/produk/detail/<%= produkJual[i].id %>" class="btn btn-sm btn-outline-info mx-1">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                        <a href="/olshop/produk/edit/<%= produkJual[i].id %>" class="btn btn-sm btn-outline-warning mx-1">
+                            <i class="fa-solid fa-edit"></i>
+                        </a>
+                        <a href="/olshop/produk/hapus/<%= produkJual[i].id %>" class="btn btn-sm btn-outline-danger mx-1">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            <% } %>
         </tbody>
     </table>
 </div>

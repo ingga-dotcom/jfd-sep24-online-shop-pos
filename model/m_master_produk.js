@@ -11,22 +11,25 @@ module.exports =
 
     getSemua: function() {
         let sqlSyntax = mysql.format(
-            `SELECT * FROM master_produk`
+            `SELECT
+                p.*, k.nama as kategori_nama 
+            FROM master_produk as p
+            LEFT JOIN master_produk_kategori as k ON k.id = p.kategori_id;`
         )
         return eksekusi( sqlSyntax )
     },
 
 
 
-    insert: function(req) {
+    insert: function(req, filename_foto1, filename_foto2, filename_foto3) {
         let sqlData = {
             nama            : req.body.form_nama,
             harga           : req.body.form_harga,
             stok            : req.body.form_stok,
             kategori_id     : req.body.form_kategori,
-            foto1           : req.body.form_foto1,
-            foto2           : req.body.form_foto2,
-            foto3           : req.body.form_foto3,
+            foto1           : filename_foto1,
+            foto2           : filename_foto2,
+            foto3           : filename_foto3,
             video           : req.body.form_video,
             deskripsi       : req.body.form_deskripsi,
             spesifikasi     : req.body.form_spesifikasi,
