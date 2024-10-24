@@ -10,6 +10,7 @@ module.exports =
     halaman_beranda: async function(req,res) {
         let data = {
             kategoriProduk          : await m_prod_kategori.getSemua(),
+            produk_diKeranjang      : await m_trans_keranjang.getJumlahProduk_diKeranjang(req),
             produkJual              : await m_master_produk.getSemua(),
             moment                  : moment,
             notifikasi              : req.query.notif,
@@ -22,9 +23,10 @@ module.exports =
 
     halaman_index_produk: async function(req,res) {
         let data = {
-            kategoriProduk  : await m_prod_kategori.getSemua(),
-            produkJual      : await m_master_produk.getSemua(),
-            notifikasi      : req.query.notif,
+            kategoriProduk      : await m_prod_kategori.getSemua(),
+            produk_diKeranjang  : await m_trans_keranjang.getJumlahProduk_diKeranjang(req),
+            produkJual          : await m_master_produk.getSemua(),
+            notifikasi          : req.query.notif,
         }
         res.render('v_olshop/produk/index', data)
     },
@@ -33,7 +35,8 @@ module.exports =
 
     halaman_form_tambah: async function(req,res) {
         let data = {
-            kategoriProduk: await m_prod_kategori.getSemua()
+            kategoriProduk      : await m_prod_kategori.getSemua(),
+            produk_diKeranjang  : await m_trans_keranjang.getJumlahProduk_diKeranjang(req),
         }
         res.render('v_olshop/produk/form-tambah', data)
     },
@@ -102,8 +105,9 @@ module.exports =
     detail_produk: async function(req,res) {
         let id = req.params.id_produk
         let data = {
-            kategoriProduk: await m_prod_kategori.getSemua(),
-            produkJual: await m_master_produk.getSatu( id ),
+            kategoriProduk      : await m_prod_kategori.getSemua(),
+            produk_diKeranjang  : await m_trans_keranjang.getJumlahProduk_diKeranjang(req),
+            produkJual          : await m_master_produk.getSatu( id ),
             moment: moment,
         }
         res.render('v_olshop/produk/detail', data)
@@ -120,6 +124,18 @@ module.exports =
         } catch (error) {
             res.redirect(`/olshop?notif=${error.message}`)
         }
+    },
+
+
+
+    keranjang_list: async function(req,res) {
+        let data = {
+            kategoriProduk          : await m_prod_kategori.getSemua(),
+            produk_diKeranjang      : await m_trans_keranjang.getJumlahProduk_diKeranjang(req),
+            detailProduk_keranjang  : await m_trans_keranjang.getDetailProduk_diKeranjang(req),
+            moment                  : moment,
+        }
+        res.render('v_olshop/keranjang/list', data)
     }
 
 }

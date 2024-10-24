@@ -31,8 +31,13 @@
                             </a>
                         </li>
                         <li class="nav-item mx-1">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link position-relative" href="/olshop/keranjang/list">
                                 <i class="fa-solid fa-cart-shopping"></i>
+                                <% if (produk_diKeranjang[0].jumlah > 0) { %>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        <%= produk_diKeranjang[0].jumlah %>
+                                    </span>
+                                <% } %>
                             </a>
                         </li>
                         <li class="nav-item mx-1">
