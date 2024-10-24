@@ -2,13 +2,18 @@ const path              = require('path')
 const moment            = require('moment')
 const m_prod_kategori   = require('../model/m_master_produk_kategori')
 const m_master_produk   = require('../model/m_master_produk')
+const m_trans_keranjang = require('../model/m_trans_keranjang')
 
 module.exports =
 {
 
     halaman_beranda: async function(req,res) {
         let data = {
-            kategoriProduk: await m_prod_kategori.getSemua()
+            kategoriProduk          : await m_prod_kategori.getSemua(),
+            produkJual              : await m_master_produk.getSemua(),
+            moment                  : moment,
+            notifikasi              : req.query.notif,
+            produkExist_diKeranjang : await m_trans_keranjang.cekProdukExist(req),
         }
         res.render('v_olshop/beranda', data)
     },
@@ -95,10 +100,26 @@ module.exports =
 
 
     detail_produk: async function(req,res) {
+        let id = req.params.id_produk
         let data = {
-            kategoriProduk: await m_prod_kategori.getSemua()
+            kategoriProduk: await m_prod_kategori.getSemua(),
+            produkJual: await m_master_produk.getSatu( id ),
+            moment: moment,
         }
         res.render('v_olshop/produk/detail', data)
+    },
+
+
+
+    keranjang_input: async function(req,res) {
+        try {
+            let insert  = await m_trans_keranjang.masukkan(req)
+            if (insert.affectedRows > 0) {
+                res.redirect(`/olshop?notif=Berhasil masukkan produk ke keranjang`)
+            }
+        } catch (error) {
+            res.redirect(`/olshop?notif=${error.message}`)
+        }
     }
 
 }
