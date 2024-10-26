@@ -5,37 +5,51 @@
 <body class="bg-body-secondary">
     <div class="container my-5">
         <h1 class="mb-4">Keranjang belanjaan kamu</h1>
-        <div class="row">
-            <div class="col-lg-8">
-                <% for( let i in detailProduk_keranjang ) { %>
-                    <div class="card border-0 mb-3">
-                        <div class="row g-0">
-                            <div class="col-md-3 text-center p-4">
-                                <img src="/upload/produk-foto/<%= detailProduk_keranjang[i].foto1 %>" class="img-fluid rounded-start" style="height: 100px; object-fit: contain;" alt="...">
-                            </div>
-                            <div class="col-md-9">
-                                <div class="card-body">
-                                    <h4 class="card-title"><%= detailProduk_keranjang[i].produk_nama %></h4><hr>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <span class="card-text">
-                                                <b id="harga_text<%= i %>">
-                                                    Rp<%= Number(detailProduk_keranjang[i].harga).toLocaleString('id-ID') %>
-                                                </b>
-                                            </span><br>
-                                            <input type="hidden" class="harga_satuan" id="harga<%= i %>" value="<%= detailProduk_keranjang[i].harga %>">
-                                            <input type="hidden" id="harga_kalkulasi<%= i %>">
-                                            <small class="card-text">stok: <%= detailProduk_keranjang[i].stok %></small><br>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="row">
-                                                <div class="col-2">
-                                                    <a href="" class="btn btn-sm btn-outline-danger">
-                                                        <i class="fa-solid fa-trash"></i>
-                                                    </a>
-                                                </div>
-                                                <div class="col-10">
-                                                    <input type="number" name="form_qty" value="<%= detailProduk_keranjang[i].qty %>" class="form-control form-control-sm qty_satuan" data-idkeranjang="<%= i %>">
+        <% if (typeof notifikasi !== 'undefined') { %>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <%- notifikasi %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <% } %>
+        <form action="/olshop/keranjang/bayar" method="post">
+            <div class="row">
+                <div class="col-lg-8">
+                    <% for( let i in detailProduk_keranjang ) { %>
+                        <div class="card border-0 mb-3">
+                            <div class="row g-0">
+                                <div class="col-md-3 text-center p-4">
+                                    <img src="/upload/produk-foto/<%= detailProduk_keranjang[i].foto1 %>" class="img-fluid rounded-start" style="height: 100px; object-fit: contain;" alt="...">
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="card-body">
+                                        <h4 class="card-title"><%= detailProduk_keranjang[i].produk_nama %></h4><hr>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <span class="card-text">
+                                                    <b id="harga_text<%= i %>">
+                                                        Rp<%= Number(detailProduk_keranjang[i].harga).toLocaleString('id-ID') %>
+                                                    </b>
+                                                </span><br>
+                                                <input type="hidden" class="harga_satuan" id="harga<%= i %>" value="<%= detailProduk_keranjang[i].harga %>">
+                                                <input type="hidden" class="harga_kalkulasi" name="form_harga_kalkulasi" id="harga_kalkulasi<%= i %>" value="<%= detailProduk_keranjang[i].harga %>">
+                                                <small class="card-text">stok: <%= detailProduk_keranjang[i].stok %></small><br>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <button type="button" class="btn btn-sm btn-danger tombol_hapus"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalHapus"
+                                                        data-id-keranjang="<%= detailProduk_keranjang[i].id %>"
+                                                        data-nama-produk="<%= detailProduk_keranjang[i].produk_nama %>"
+                                                        >
+                                                            <i class="fa-solid fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <input type="number" name="form_qty" value="<%= detailProduk_keranjang[i].qty %>" class="form-control form-control-sm qty_satuan" data-idkeranjang="<%= i %>">
+                                                        <input type="hidden" name="form_id_produk" value="<%= detailProduk_keranjang[i].id_produk %>">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -43,47 +57,118 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                <% } %>
-            </div>
-            <!-- kalkulasi harga & qty belanjaan -->
-            <div class="col-lg-4">
-                <div class="card border-0">
-                    <div class="card-body">
-                        <h5><b>Ringkasan belanja</b></h5>
-                        <div class="row">
-                            <div class="col-6">Total Harga</div>
-                            <div class="col-6 text-end total_harga"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">Total Qty</div>
-                            <div class="col-6 text-end">xxx</div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="d-grid gap-2">
-                                    <a href="#" class="btn btn-block btn-success">Bayar</a>
+                    <% } %>
+                </div>
+                <!-- kalkulasi harga & qty belanjaan -->
+                <div class="col-lg-4">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <h5><b>Ringkasan belanja</b></h5>
+                            <div class="row">
+                                <div class="col-6">Total Harga</div>
+                                <div class="col-6 text-end"><span id="harga_keseluruhan">zzz</span></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">Total Qty</div>
+                                <div class="col-6 text-end"><span id="qty_keseluruhan">xxx</span></div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-12">
+                                    <% if (user_id_role == 2) { %>
+                                        <div class="d-grid gap-2">
+                                            <button type="submit" class="btn btn-block btn-success">Bayar</button>
+                                        </div>
+                                    <% } %>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </form>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalHapus" tabindex="-1" aria-labelledby="modalHapusLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="form_hapus_keranjang" action="#" method="post">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalHapusLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Hapus <b><span id="hapus_nama_produk"></span></b> dari keranjang??
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">Konfirmasi Hapus</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
 
     <script>
-        $(document).on('change', '.qty_satuan' , function() {
-            let qty             = $(this).val()
-            let idkeranjang     = $(this).data('idkeranjang')
-            let harga           = $(`#harga${idkeranjang}`).val()
-            let harga_kalkulasi = qty * harga
-            // assign ke html
-            $(`#harga_text${idkeranjang}`).html('Rp'+Number(harga_kalkulasi).toLocaleString('id-ID'))
-            // assign ke inputan kalkulasi
-            $(`#harga_kalkulasi${idkeranjang}`).val(harga_kalkulasi)
+
+        function hitung_qty_keseluruhan() {
+            // ambil semua qty yg ada di class qty_satuan
+            let qty_total = Number(0)
+            $('.qty_satuan').each(function(){
+                qty_total += Number(this.value)
+            })
+            // assign totalnya ke element html yg idnya qty_keseluruhan
+            $('#qty_keseluruhan').html(qty_total)
+        }
+
+
+
+        function hitung_harga_keseluruhan() {
+            // ambil semua harga yg ada di class harga_kalkulasi
+            let harga_total = Number(0)
+            $('.harga_kalkulasi').each(function(){
+                harga_total += Number(this.value)
+            })
+            // assign totalnya ke element html yg idnya harga_keseluruhan
+            $('#harga_keseluruhan').html(`Rp ${harga_total.toLocaleString('id-ID')}`)
+        }
+
+
+
+        $(document).ready( function(){
+
+            hitung_qty_keseluruhan()
+            hitung_harga_keseluruhan()
+
+
+            $(document).on('change', '.qty_satuan' , function() {
+                let qty             = $(this).val()
+                let idkeranjang     = $(this).data('idkeranjang')
+                let harga           = $(`#harga${idkeranjang}`).val()
+                let harga_kalkulasi = qty * harga
+
+                // assign ke html
+                $(`#harga_text${idkeranjang}`).html('Rp'+Number(harga_kalkulasi).toLocaleString('id-ID'))
+
+                // assign ke inputan kalkulasi
+                $(`#harga_kalkulasi${idkeranjang}`).val(harga_kalkulasi)
+
+                hitung_qty_keseluruhan()
+                hitung_harga_keseluruhan()
+            })
+
+
+
+            $(document).on('click', '.tombol_hapus', function() {
+                let idkeranjang = $(this).data('id-keranjang')
+                let namaproduk  = $(this).data('nama-produk')
+                $('#form_hapus_keranjang').attr('action', `/olshop/keranjang/hapus/${idkeranjang}`)
+                $('#hapus_nama_produk').html(namaproduk)
+            })
+
+
         })
     </script>
 </body>
