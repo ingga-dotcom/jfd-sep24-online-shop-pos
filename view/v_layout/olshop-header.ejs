@@ -25,11 +25,15 @@
                 </ul>
                 <div class="float-end">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                        <li class="nav-item mx-1">
-                            <a class="nav-link" href="#">
-                                <i class="fa-solid fa-sack-dollar"></i>
-                            </a>
-                        </li>
+
+                        <% if (req.session.user[0].role_id == 1) { %>
+                            <li class="nav-item mx-1">
+                                <a class="nav-link" href="#">
+                                    <i class="fa-solid fa-sack-dollar"></i>
+                                </a>
+                            </li>
+                        <% } %>
+
                         <li class="nav-item mx-1">
                             <a class="nav-link position-relative" href="/olshop/keranjang/list">
                                 <i class="fa-solid fa-cart-shopping"></i>
@@ -40,9 +44,57 @@
                                 <% } %>
                             </a>
                         </li>
+
+                        <% if (req.session.user[0].role_id == 2) { %>
+                            <li class="nav-item mx-1">
+                                <div class="dropdown">
+                                    <button class="nav-link position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa-solid fa-boxes-packing"></i>
+                                        <% if (produk_diProses[0].jumlah > 0) { %>
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                <%= produk_diProses[0].jumlah %>
+                                            </span>
+                                        <% } %>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <% for(let i in detailProduk_diProses) { %>
+                                                <div class="dropdown-item">
+                                                    <table>
+                                                        <tr>
+                                                            <td><%= detailProduk_diProses[i].produk_nama %> (<%= detailProduk_diProses[i].qty %>)</td>
+                                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                                            <td class="text-end">Rp <%= Number(detailProduk_diProses[i].harga).toLocaleString('id-ID') %></td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            <% } %>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        <% } %>
+
+                        <% if (req.session.user[0].role_id == 1) { %>
+                            <li class="nav-item mx-1">
+                                <a href="/olshop/produk" class="nav-link">
+                                    <i class="fa-solid fa-boxes-stacked me-1"></i> Produk Saya
+                                </a>
+                            </li>
+                        <% } %>
+
                         <li class="nav-item mx-1">
-                            <a href="/olshop/produk" class="nav-link">
-                                <i class="fa-solid fa-boxes-stacked me-1"></i> Produk Saya
+                            <form action="/auth/logout" method="post">
+                                <button type="submit" class="nav-link" onclick="return confirm('Lanjut keluar ??')">
+                                    <i class="fa-solid fa-right-from-bracket me-1"></i>
+                                </button>
+                            </form>
+                        </li>
+
+                        <li class="nav-item ms-4">
+                            <a class="nav-link" href="#">
+                                <i class="fa-solid fa-circle-user me-1"></i>
+                                <span><%= req.session.user[0].nama_lengkap %></span>
                             </a>
                         </li>
                     </ul>

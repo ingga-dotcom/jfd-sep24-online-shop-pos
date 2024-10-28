@@ -34,4 +34,33 @@ module.exports =
         return eksekusi( sqlSyntax )
     },
 
+
+
+    getJumlahProduk_diProses: function(req) {
+        let sqlSyntax = mysql.format(
+            `SELECT COUNT(id_produk) as jumlah
+            FROM trans_pembelian
+            WHERE id_user = ?`,
+            [req.session.user[0].id]
+        )
+        return eksekusi( sqlSyntax )
+    },
+
+
+
+    getDetailProduk_diProses: function(req) {
+        let sqlSyntax = mysql.format(
+            `SELECT
+                pmb.*,
+                pro.nama as produk_nama, pro.harga, pro.stok, pro.foto1
+            FROM trans_pembelian as pmb
+            LEFT JOIN master_produk as pro ON pro.id = pmb.id_produk
+            WHERE id_user = ?`,
+            [req.session.user[0].id]
+        )
+        return eksekusi( sqlSyntax )
+    },
+
+
+
 }

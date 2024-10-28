@@ -38,6 +38,7 @@ app.set('views', './view')
 app.get('/', c_beranda.halaman_awal)
 app.get('/auth/login', c_auth.halaman_login)
 app.post('/auth/proses-login', c_auth.proses_login)
+app.post('/auth/logout', cek_login, c_auth.proses_logout)
 
 app.get('/toko', cek_login, c_toko.index)
 
