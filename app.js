@@ -43,14 +43,21 @@ app.post('/auth/logout', cek_login, c_auth.proses_logout)
 app.get('/toko', cek_login, c_toko.index)
 
 app.get('/olshop', cek_login, c_olshop.halaman_beranda)
+
 app.get('/olshop/produk', cek_login, c_olshop.halaman_index_produk)
 app.get('/olshop/produk/tambah', cek_login, c_olshop.halaman_form_tambah)
 app.post('/olshop/produk/proses-insert', cek_login, c_olshop.proses_insert_produk)
 app.get('/olshop/produk/detail/:id_produk', cek_login, c_olshop.detail_produk)
+
 app.get('/olshop/keranjang/input/:id_produk', cek_login, c_olshop.keranjang_input)
 app.get('/olshop/keranjang/list', cek_login, c_olshop.keranjang_list)
 app.post('/olshop/keranjang/hapus/:id_keranjang', cek_login, c_olshop.keranjang_hapus)
 app.post('/olshop/keranjang/bayar', cek_login, c_olshop.keranjang_bayar)
+
+app.get('/olshop/orderan-masuk/list', cek_login, c_olshop.orderanMasuk_list)
+app.post('/olshop/orderan-masuk/kirim-barang/:id_customer', cek_login, c_olshop.orderanMasuk_prosesKirimBarang)
+
+app.get('/percobaan-hash-password/:inputpassword', c_auth.percobaan)
 
 
 app.listen(port, ()=>{

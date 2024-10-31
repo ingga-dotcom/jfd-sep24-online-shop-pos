@@ -1,0 +1,55 @@
+<%- include('../../v_layout/head') %>
+<%- include('../../v_layout/olshop-header') %>
+
+<body class="bg-body-secondary">
+    <div class="container my-5">
+        <h1 class="text-capitalize">orderan masuk</h1>
+        <hr>
+        <% for(let i in orderanMasuk_detail) { %>
+            <form action="/olshop/orderan-masuk/kirim-barang/<%= orderanMasuk_detail[i].id_user %>" method="post">
+                <div class="card border-0 mb-5">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="card-title">
+                                    Customer: <%= orderanMasuk_detail[i].nama_lengkap %>
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <% for( let j in orderanMasuk_detail[i].produk_yang_dibeli ) { %>
+                            <div class="row">
+                                <div class="col-2 text-center p-2">
+                                    <img src="/upload/produk-foto/<%= orderanMasuk_detail[i].produk_yang_dibeli[j].foto1 %>" class="img-fluid rounded-start" style="height: 50px; object-fit: contain;" alt="...">
+                                </div>
+                                <div class="col-6">
+                                    <h5 class="card-title"><%= orderanMasuk_detail[i].produk_yang_dibeli[j].produk_nama %></h5>
+                                </div>
+                                <div class="col-1 text-end">
+                                    <span class="card-text">Qty: <b><%= orderanMasuk_detail[i].produk_yang_dibeli[j].qty %></b></span><br>
+                                </div>
+                                <div class="col-3 text-end">
+                                    <span class="card-text">
+                                        <b>Rp <%= Number(orderanMasuk_detail[i].produk_yang_dibeli[j].harga).toLocaleString('id-ID') %></b>
+                                    </span>
+                                </div>
+                            </div>
+                        <% } %>
+                        <div class="row">
+                            <div class="col-12 text-end">
+                                <button type="submit" class="btn btn-success"
+                                onclick="return confirm('konfirmasi pengiriman orderan a/n <%= orderanMasuk_detail[i].nama_lengkap %> ??')">
+                                    kirim
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        <% } %>
+    </div>
+</body>
+
+<%- include('../../v_layout/olshop-footer') %>
+<%- include('../../v_layout/foot') %>

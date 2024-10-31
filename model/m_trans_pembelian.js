@@ -40,7 +40,10 @@ module.exports =
         let sqlSyntax = mysql.format(
             `SELECT COUNT(id_produk) as jumlah
             FROM trans_pembelian
-            WHERE id_user = ?`,
+            WHERE
+                dikirim IS NULL
+                AND diterima IS NULL
+                AND id_user = ?`,
             [req.session.user[0].id]
         )
         return eksekusi( sqlSyntax )
@@ -55,11 +58,106 @@ module.exports =
                 pro.nama as produk_nama, pro.harga, pro.stok, pro.foto1
             FROM trans_pembelian as pmb
             LEFT JOIN master_produk as pro ON pro.id = pmb.id_produk
-            WHERE id_user = ?`,
+            WHERE
+                dikirim IS NULL
+                AND diterima IS NULL
+                AND id_user = ?`,
             [req.session.user[0].id]
         )
         return eksekusi( sqlSyntax )
     },
+
+
+
+    getJumlahOrderanMasuk: function() {
+        let sqlSyntax = mysql.format(
+            `SELECT COUNT(id_produk) as jumlah
+            FROM trans_pembelian`
+        )
+        return eksekusi( sqlSyntax )
+    },
+
+
+
+    getSemuaCustomer: function() {
+        let sqlSyntax = mysql.format(
+            `SELECT DISTINCT pmb.id_user, u.nama_lengkap, u.email
+            FROM trans_pembelian as pmb
+            LEFT JOIN user as u ON u.id = pmb.id_user
+            WHERE
+                dikirim IS NULL
+                AND diterima IS NULL`
+        )
+        return eksekusi( sqlSyntax )
+    },
+
+
+
+    getSemuaProduk_byCustomer: function(id_user) {
+        let sqlSyntax = mysql.format(
+            `SELECT
+                pmb.*,
+                pro.nama as produk_nama, pro.harga, pro.stok, pro.foto1,
+                u.email, u.nama_lengkap
+            FROM trans_pembelian as pmb
+            LEFT JOIN master_produk as pro  ON pro.id = pmb.id_produk
+            LEFT JOIN user as u             ON u.id = pmb.id_user
+            WHERE
+                dikirim IS NULL
+                AND diterima IS NULL
+                AND id_user = ?`,
+            [id_user]
+        )
+        return eksekusi( sqlSyntax )
+    },
+
+
+
+    updateDikirim_byIdCustomer: function(id_customer) {
+        let sqlData = {
+            dikirim: 1,
+            updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+        }
+        let sqlSyntax = mysql.format(
+            `UPDATE trans_pembelian SET ? WHERE id_user = ?`,
+            [sqlData, id_customer]
+        )
+        return eksekusi( sqlSyntax )
+    },
+
+
+
+    getJumlahProduk_diKirim: function(req) {
+        let sqlSyntax = mysql.format(
+            `SELECT COUNT(id_produk) as jumlah
+            FROM trans_pembelian
+            WHERE
+                dikirim IS NOT NULL
+                AND diterima IS NULL
+                AND id_user = ?`,
+            [req.session.user[0].id]
+        )
+        return eksekusi( sqlSyntax )
+    },
+
+
+
+    getDetailProduk_diKirim: function(req) {
+        let sqlSyntax = mysql.format(
+            `SELECT
+                pmb.*,
+                pro.nama as produk_nama, pro.harga, pro.stok, pro.foto1
+            FROM trans_pembelian as pmb
+            LEFT JOIN master_produk as pro ON pro.id = pmb.id_produk
+            WHERE
+                dikirim IS NOT NULL
+                AND diterima IS NULL
+                AND id_user = ?`,
+            [req.session.user[0].id]
+        )
+        return eksekusi( sqlSyntax )
+    },
+
 
 
 
