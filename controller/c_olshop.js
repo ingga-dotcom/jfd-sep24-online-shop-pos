@@ -5,6 +5,7 @@ const m_master_produk   = require('../model/m_master_produk')
 const m_trans_keranjang = require('../model/m_trans_keranjang')
 const m_trans_pembelian = require('../model/m_trans_pembelian')
 
+
 module.exports =
 {
 
@@ -264,6 +265,29 @@ module.exports =
             kategoriProduk          : await m_prod_kategori.getSemua(),
             produk_diKeranjang      : await m_trans_keranjang.getJumlahProduk_diKeranjang(req),
             produkJual              : await m_prod_kategori.getSatu(id),
+            moment                  : moment,
+            notifikasi              : req.query.notif,
+            produkExist_diKeranjang : await m_trans_keranjang.cekProdukExist(req),
+            produk_diProses         : await m_trans_pembelian.getJumlahProduk_diProses(req),
+            detailProduk_diProses   : await m_trans_pembelian.getDetailProduk_diProses(req),
+            orderanMasuk            : await m_trans_pembelian.getJumlahOrderanMasuk(),
+            produk_diKirim          : await m_trans_pembelian.getJumlahProduk_diKirim(req),
+            detailProduk_diKirim    : await m_trans_pembelian.getDetailProduk_diKirim(req),
+        }
+        res.render('v_olshop/produk/kategori', data)
+    },
+
+
+
+    produk_search: async function(req,res) {
+
+      // Access the form_search query parameter
+        let form_search = req.query.form_search;
+        let data = {
+            req                     : req,
+            kategoriProduk          : await m_prod_kategori.getSemua(),
+            produk_diKeranjang      : await m_trans_keranjang.getJumlahProduk_diKeranjang(req),
+            produkJual              : await m_master_produk.cari_search(form_search),
             moment                  : moment,
             notifikasi              : req.query.notif,
             produkExist_diKeranjang : await m_trans_keranjang.cekProdukExist(req),
