@@ -125,7 +125,7 @@ module.exports =
         let id = req.params.id_produk
         let data = {
             req                 : req,
-            kategoriProduk      : await m_prod_kategori.getSemua(),
+            kategoriProduk      : await m_prod_kategori.getSatu(id),
             produk_diKeranjang  : await m_trans_keranjang.getJumlahProduk_diKeranjang(req),
             produkJual          : await m_master_produk.getSatu( id ),
             produk_diProses     : await m_trans_pembelian.getJumlahProduk_diProses(req),
@@ -241,6 +241,39 @@ module.exports =
         } catch (error) {
             res.redirect(`/olshop/orderan-masuk/list?notif=${error.message}`)
         }
+    },
+
+
+    produk_perkategori: async function(req,res) {
+
+        let id = req.params.id_produk;
+        try {
+            let update  = await m_prod_kategori.getSatu(id)
+            if (update.affectedRows > 0) {
+                res.redirect(`/olshop/produk/kategori/id?`);
+            }
+
+            
+        } catch (error) {
+            res.redirect(`/olshop/produk?notif=${error.message}`)
+        }
+
+    
+        let data = {
+            req                     : req,
+            kategoriProduk          : await m_prod_kategori.getSemua(),
+            produk_diKeranjang      : await m_trans_keranjang.getJumlahProduk_diKeranjang(req),
+            produkJual              : await m_prod_kategori.getSatu(id),
+            moment                  : moment,
+            notifikasi              : req.query.notif,
+            produkExist_diKeranjang : await m_trans_keranjang.cekProdukExist(req),
+            produk_diProses         : await m_trans_pembelian.getJumlahProduk_diProses(req),
+            detailProduk_diProses   : await m_trans_pembelian.getDetailProduk_diProses(req),
+            orderanMasuk            : await m_trans_pembelian.getJumlahOrderanMasuk(),
+            produk_diKirim          : await m_trans_pembelian.getJumlahProduk_diKirim(req),
+            detailProduk_diKirim    : await m_trans_pembelian.getDetailProduk_diKirim(req),
+        }
+        res.render('v_olshop/produk/kategori', data)
     },
 
 }
