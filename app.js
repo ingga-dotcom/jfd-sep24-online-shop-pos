@@ -9,7 +9,7 @@ const c_auth        = require('./controller/c_auth')
 const cek_login     = c_auth.cek_login
 const c_toko        = require('./controller/c_toko')
 const c_olshop      = require('./controller/c_olshop')
-
+const c_profile      = require('./controller/c_profile')
 
 // settingan untuk data session login
 app.use( cookieParser('rahasia') )
@@ -48,8 +48,24 @@ app.get('/olshop/produk', cek_login, c_olshop.halaman_index_produk)
 app.get('/olshop/produk/tambah', cek_login, c_olshop.halaman_form_tambah)
 app.post('/olshop/produk/proses-insert', cek_login, c_olshop.proses_insert_produk)
 app.get('/olshop/produk/detail/:id_produk', cek_login, c_olshop.detail_produk)
+
+
+
 app.get('/olshop/produk/kategori/:id_produk', cek_login, c_olshop.produk_perkategori)
 app.get('/olshop/form_search', cek_login, c_olshop.produk_search)
+
+// Update profile password
+app.post('/olshop/update_profile', cek_login, c_profile.user_profile)
+
+// Route to render the profile page
+app.get('/profile_page', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/auth/login');  // Redirect if no session
+    }
+    // Pass session data to template
+    res.render('profile_page', { sessionUser: req.session.user });
+});
+
 
 app.get('/olshop/keranjang/input/:id_produk', cek_login, c_olshop.keranjang_input)
 app.get('/olshop/keranjang/list', cek_login, c_olshop.keranjang_list)

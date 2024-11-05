@@ -1,0 +1,34 @@
+<%- include('v_layout/head') %>
+
+<body class="d-flex align-items-center py-8 bg-body-tertiary">
+    <link rel="stylesheet" href="/css-tambahan/layout-login.css">
+    <main class="form-signin w-100 m-auto">
+      <h1>PROFILE ANDA</h1>
+        <form method="post" action="/olshop/update_profile/">
+          <img class="mb-8" src=".jpg" alt="Upload Photo" height="500">
+          <br>
+          <% if (typeof notifikasi !== 'undefined') { %>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <%= notifikasi %>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          <% } %>
+
+          <h1 class="h3 mt-3 mb-3 fw-normal">Update your password</h1>
+      
+          <div class="form-floating">
+            <input type="password" class="form-control" name="form_oldpassword" placeholder="current password">
+            <label for="floatingInput">Current Password</label>
+          </div>
+          <div class="form-floating">
+            <input type="password" class="form-control" name="form_newpassword" placeholder="New Password">
+            <label for="floatingPassword">New Password</label>
+          </div>
+          <input type="hidden" name="user_email" value="inggadewi.w@gmail.com">
+
+          <button class="btn btn-primary w-100 py-2" type="submit">Update</button>
+         
+        </form>
+    </main>
+</body>
+
