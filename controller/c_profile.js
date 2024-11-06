@@ -28,7 +28,6 @@ async function checkOldPassword(email, inputPassword) {
         throw error;
     }
 }
-
 module.exports = {
     user_profile: async function (req, res) {
         let email = req.body.user_email;
@@ -40,7 +39,10 @@ module.exports = {
         }
 
         if (!newPassword) {
-            return res.send("New password is required.");
+            return res.render('profile_page', {
+                notifikasi: "Isikan password baru!",
+                sessionUser: req.session.user[0] // Send session data
+            });
         }
 
         try {
@@ -48,7 +50,10 @@ module.exports = {
             const isOldPasswordCorrect = await checkOldPassword(email, oldPassword);
 
             if (!isOldPasswordCorrect) {
-                return res.render('profile_page', { notifikasi: "Current password is incorrect." });
+                return res.render('profile_page', {
+                    notifikasi: "Password sekarang tidak sesuai!",
+                    sessionUser: req.session.user[0] // Send session data
+                });
             }
 
             // Check if the user exists
@@ -63,19 +68,28 @@ module.exports = {
 
                 // Check if any rows were affected
                 if (updateResult.affectedRows > 0) {
-                    const notifikasi = "Password updated successfully!";
-                    res.render('profile_page', { notifikasi });
+                    const notifikasi = "Yeay..Password baru sudah terupdate";
+                    res.render('profile_page', {
+                        notifikasi,
+                        sessionUser: req.session.user[0] // Send session data
+                    });
                 } else {
                     const notifikasi = "Password update failed. Please try again.";
-                    res.render('profile_page', { notifikasi });
+                    res.render('profile_page', {
+                        notifikasi,
+                        sessionUser: req.session.user[0] // Send session data
+                    });
                 }
             } else {
-                res.send("User not found.");
+                const notifikasi = "User not found.";
+                res.render('profile_page', {
+                    notifikasi,
+                    sessionUser: req.session.user[0] // Send session data
+                });
             }
         } catch (error) {
             res.send(`An error occurred: ${error.message}`);
         }
     }
 };
-
 

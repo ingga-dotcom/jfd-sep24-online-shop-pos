@@ -1,34 +1,81 @@
 <%- include('v_layout/head') %>
 
 <body class="d-flex align-items-center py-8 bg-body-tertiary">
-    <link rel="stylesheet" href="/css-tambahan/layout-login.css">
-    <main class="form-signin w-100 m-auto">
-      <h1>PROFILE ANDA</h1>
-        <form method="post" action="/olshop/update_profile/">
-          <img class="mb-8" src=".jpg" alt="Upload Photo" height="500">
-          <br>
-          <% if (typeof notifikasi !== 'undefined') { %>
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-              <%= notifikasi %>
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          <% } %>
+  <link rel="stylesheet" href="/css-tambahan/layout-login.css">
 
-          <h1 class="h3 mt-3 mb-3 fw-normal">Update your password</h1>
-      
-          <div class="form-floating">
-            <input type="password" class="form-control" name="form_oldpassword" placeholder="current password">
-            <label for="floatingInput">Current Password</label>
-          </div>
-          <div class="form-floating">
-            <input type="password" class="form-control" name="form_newpassword" placeholder="New Password">
-            <label for="floatingPassword">New Password</label>
-          </div>
-          <input type="hidden" name="user_email" value="inggadewi.w@gmail.com">
+  <main class="form-signin w-100 m-auto">
+    
 
-          <button class="btn btn-primary w-100 py-2" type="submit">Update</button>
-         
-        </form>
-    </main>
+
+
+    <!-- User Info Table -->
+    <div style="position: absolute; top: 100px; right: 500px; border: 2px solid #ddd; padding: 50px; border-radius: 10px;">
+      <table class="table table-borderless">
+        <tbody>
+            <h1 class="h3 mt-3 mb-3 fw-normal"><strong>PROFILE ANDA</strong></h1>
+            <tr>
+                <td><strong>Nama:</strong></td>
+                <td><%= sessionUser.nama_lengkap %></td>
+            </tr>
+            <tr>
+                <td><strong>Email:</strong></td>
+                <td><%= sessionUser.email %></td>
+            </tr>
+            <tr>
+                <td><strong>Role:</strong></td>
+                <td>
+                  <% if (sessionUser.role_id == 1) { %> 
+                    Penjual
+                <% } else if (sessionUser.role_id == 2) { %>
+                    Pembeli
+                <% } else { %>
+                    Tidak Diketahui
+                <% } %>
+              </td>
+            </tr>
+
+              </tbody>
+                 
+              <td>
+                <form method="post" action="/olshop/update_profile/">
+                  <img class="mb-8" width="30%" height="30%" src="https://cdn-icons-png.freepik.com/256/11135/11135314.png?semt=ais_hybrid" alt="Upload Photo">
+                  <br>
+            
+                  <% if (typeof notifikasi !== 'undefined') { %>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                      <%= notifikasi %>
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  <% } %>
+            
+                  <h1 class="h3 mt-3 mb-3 fw-normal">Ganti Password</h1>
+            
+                  <div class="form-floating">
+                    <input type="password" class="form-control" name="form_oldpassword" placeholder="current password">
+                    <label for="floatingInput">Current Password</label>
+                  </div>
+                  <div class="form-floating">
+                    <input type="password" class="form-control" name="form_newpassword" placeholder="New Password">
+                    <label for="floatingPassword">New Password</label>
+                  </div>
+                  <input type="hidden" name="user_email" value=<%= sessionUser.email %>>
+                  <button class="btn btn-primary w-100 py-2" type="submit">Update</button>
+                </td>
+                  
+               
+            
+            
+                </form>
+              
+            
+        </tbody>
+    </table>
+    <td>
+      <a href="/olshop/" class="btn btn-secondary w-100 py-2 mt-3">Kembali ke halaman belanja</a>
+    </td>
+
+    </div>
+
+
+  </main>
 </body>
-

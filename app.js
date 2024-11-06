@@ -57,14 +57,37 @@ app.get('/olshop/form_search', cek_login, c_olshop.produk_search)
 // Update profile password
 app.post('/olshop/update_profile', cek_login, c_profile.user_profile)
 
-// Route to render the profile page
-app.get('/profile_page', (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/auth/login');  // Redirect if no session
-    }
-    // Pass session data to template
-    res.render('profile_page', { sessionUser: req.session.user });
+// Route to redirect and send session data via POST
+app.get('/profile_page', cek_login, (req, res) => {
+    const sessionUser = req.session.user[0];
+
+    // Render a form that auto-submits the session data as a POST request
+    res.send(`
+        <form id="sessionForm" action="/profile_page_render" method="POST">
+            <input type="hidden" name="role_id" value="${sessionUser.role_id}" />
+            <input type="hidden" name="nama_lengkap" value="${sessionUser.nama_lengkap}" />
+            <input type="hidden" name="email" value="${sessionUser.email}" />
+            <!-- Add more hidden inputs as needed for other session data -->
+        </form>
+        <script>
+            document.getElementById('sessionForm').submit();
+        </script>
+    `);
 });
+
+// Final target URL to render the profile page with session data
+app.post('/profile_page_render', (req, res) => {
+    const sessionUser = {
+        role_id: req.body.role_id,
+        nama_lengkap: req.body.nama_lengkap,
+        email: req.body.email,
+        // Set role text based on role_id
+        role: req.body.role_id === '1' ? 'Penjual' : 'Pembeli' // Default to 'Pelanggan' or another appropriate role if needed
+    };
+
+    res.render('profile_page', { sessionUser });
+});
+
 
 
 app.get('/olshop/keranjang/input/:id_produk', cek_login, c_olshop.keranjang_input)
